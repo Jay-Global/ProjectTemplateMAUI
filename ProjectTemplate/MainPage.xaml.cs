@@ -23,7 +23,7 @@ public partial class MainPage : ContentPage
         if (selection != null)
         {
             (BindingContext as MainPageViewModel).SelectedEmployee = selection;
-            DisplayAlert("Selected", $"FirstName {selection.firstName} lastname{selection.lastName} taxThreshold? {selection.taxthreshold}", "OK");
+            DisplayAlert("Selected Employee", $" {selection.firstName} {selection.lastName} \n Is claiming a tax free threshold \n {selection.taxthreshold}", "OK");
         }
     }
 

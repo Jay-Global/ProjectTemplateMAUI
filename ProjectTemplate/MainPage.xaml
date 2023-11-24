@@ -22,18 +22,18 @@
         </Grid.ColumnDefinitions>
         
         <!--Heading 1 LEFT-->
-        <Label TextColor="White" Text="Employee Detail" Grid.Column="0" Grid.Row="0" Padding="10" FontSize="Medium"/>
+        <Label TextColor="White" Text="Employee Detail" Grid.Column="0" Grid.Row="0" Padding="10" FontSize="Large"/>
         
         <!--Data Grid LEFT-->
         <dg:DataGrid Grid.Column="0" Grid.Row="1" x:Name="PersonDataGrid" ItemsSource="{Binding Employees}" RowHeight="70" HeaderHeight="50" BorderColor="DarkGrey" 
-             HeaderBackground="LightSeaGreen" ItemSelected="PersonDataGrid_ItemSelected">
+             HeaderBackground="LightSkyBlue" ItemSelected="PersonDataGrid_ItemSelected">
             <dg:DataGrid.Columns>
                 <dg:DataGridColumn Title="Id" PropertyName="employeeID" Width="40">
                     <dg:DataGridColumn.CellTemplate>
                         <DataTemplate>
                             <ContentView>
                                 <Grid>
-                                    <Label Text="{Binding ., FallbackValue='id'}" FontSize="Medium" FontAttributes="Bold" TextColor="Black"/>
+                                    <Label Text="{Binding ., FallbackValue='id'}" FontSize="Medium" FontAttributes="Bold" TextColor="Black" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                                 </Grid>
                             </ContentView>
                         </DataTemplate>
@@ -43,7 +43,7 @@
                     <dg:DataGridColumn.CellTemplate>
                         <DataTemplate >
                             <ContentView>
-                                <Label Text="{Binding ., FallbackValue='Fist Name'}" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding ., FallbackValue='Fist Name'}" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                             </ContentView>
                         </DataTemplate>
                     </dg:DataGridColumn.CellTemplate>
@@ -52,7 +52,7 @@
                     <dg:DataGridColumn.CellTemplate>
                         <DataTemplate>
                             <ContentView>
-                                <Label Text="{Binding ., FallbackValue='Last Name'}" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center"/>
+                                <Label Text="{Binding ., FallbackValue='Last Name'}" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                             </ContentView>
                         </DataTemplate>
                     </dg:DataGridColumn.CellTemplate>
@@ -62,7 +62,7 @@
                         <DataTemplate>
                             <ContentView>
                                 <Grid>
-                                    <Label Text="{Binding ., FallbackValue='typeEmp'}" FontAttributes="Bold" TextColor="Black"/>
+                                    <Label Text="{Binding ., FallbackValue='typeEmp'}" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                                 </Grid>
                             </ContentView>
                         </DataTemplate>
@@ -78,9 +78,9 @@
         </dg:DataGrid>
         
         <!--Entry for Hrs LEFT-->
-        <HorizontalStackLayout Grid.Column="0" Grid.Row="2">
-            <Label Text="Hours Worked (hrs)"/>
-            <Entry Placeholder="0" BackgroundColor="White" TextColor="Black" Text="{Binding HoursWorked}"/>
+        <HorizontalStackLayout Grid.Column="0" Grid.Row="2" Margin="5">
+            <Label Text="Hours Worked (hrs)" Padding="10" FontSize="Large"/>
+            <Entry Placeholder="0" BackgroundColor="White" TextColor="Black" Text="{Binding HoursWorked}" MaximumHeightRequest="35"/>
         </HorizontalStackLayout>
 
         <!--Calc Btn LEFT-->
@@ -88,24 +88,36 @@
                 Padding="20"
                 Grid.Column="0"
                 Grid.Row="3"
-                Command="{Binding CalculatePayCommand}"/>
+                Command="{Binding CalculatePayCommand}"
+                Margin="10"/>
         
         <!--Heading 2-->
         <Label TextColor="White" Text="Payment Summary" Grid.Column="1" Grid.Row="0" Padding="10" FontSize="Medium"/>
            
         <!--Payslip Summary-->
         <VerticalStackLayout Grid.Column="1" Grid.Row="1" Padding="10">
-            <Label Text="{Binding NameDisplay}"/>
-            <Label Text="{Binding RoleDisplay}"/>
-            <Label Text="{Binding TaxThresholdDisplay}"/>
-            <Label Text="{Binding HoursWorkedDisplay}"/>
-            <Label Text="{Binding HourlyRateDisplay}"/>
-                <Label Text="{Binding GrossPay}"/>
-                <Label Text="{Binding Tax}"/>
-                <Label Text="{Binding NetPay}"/>
-                <Label Text="{Binding Superannuation}"/>
-            <Label Text="{Binding DateDisplay}"/>
-            <Label Text="{Binding TimeDisplay}"/>
+            <Label Text="Name:"/>
+            <Label Text="{Binding NameDisplay}" Margin="12,6"/>
+            <Label Text="Role:"/>
+            <Label Text="{Binding RoleDisplay}" Margin="12,6"/>
+            <Label Text="Tax free treshold claimed:"/>
+            <Label Text="{Binding TaxThresholdDisplay}" Margin="12,6"/>
+            <Label Text="Hours worked:"/>
+            <Label Text="{Binding HoursWorkedDisplay}" Margin="12,6"/>
+            <Label Text="Hourly rate:"/>
+            <Label Text="{Binding HourlyRateDisplay}" Margin="12,6"/>
+            <Label Text="Gross pay:"/>
+                <Label Text="{Binding GrossPay}" Margin="12,6"/>
+            <Label Text="Tax paid:"/>
+                <Label Text="{Binding Tax}" Margin="12,6"/>
+            <Label Text="Net pay:"/>
+                <Label Text="{Binding NetPay}" Margin="12,6"/>
+            <Label Text="Superannuation:"/>
+                <Label Text="{Binding Superannuation}" Margin="12,6"/>
+            <Label Text="Date:"/>
+            <Label Text="{Binding DateDisplay}" Margin="12,6"/>
+            <Label Text="Time:"/>
+            <Label Text="{Binding TimeDisplay}" Margin="12,6"/>
         </VerticalStackLayout>
 
         <!--Placeholder for saved file feedback-->
@@ -118,7 +130,7 @@
                 Padding="20"
                 Grid.Column="1"
                 Grid.Row="3"
-                />
+                Margin="10"/>
 
     </Grid>
 
