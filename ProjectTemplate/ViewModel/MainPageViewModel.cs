@@ -276,6 +276,13 @@ namespace ProjectTemplate.ViewModel
         [RelayCommand]
         public void CalculatePay()
         {
+            // Check if HoursWorked is within the valid range
+            if (HoursWorked <= 0 || HoursWorked > 40)
+            {
+                StatusMessage = "Hours worked must be greater than 0 and no more than 40.";
+                return; // Exit early if validation fails
+            }
+
             if (SelectedEmployee != null && PayCalculator != null)
             {
                 // Set UI-bound properties for employee details
@@ -302,12 +309,56 @@ namespace ProjectTemplate.ViewModel
 
                 // Clear the hours worked input
                 HoursWorked = 0;
+                StatusMessage = "";
             }
             else
             {
                 StatusMessage = "Unable to calculate pay. Please try again.";
             }
         }
+
+        [RelayCommand]
+        public async Task SaveData()
+        {
+            if (SelectedEmployee == null)
+            {
+                StatusMessage = "No employee selected.";
+                return;
+            }
+
+            string filename = $"Pay-{SelectedEmployee.employeeID}-{SelectedEmployee.firstName}{SelectedEmployee.lastName}-{DateTime.Now:yyyyMMddHHmmss}.csv";
+            string filePath = Path.Combine(FileSystem.Current.AppDataDirectory, filename);
+
+            try
+            {
+                using var stream = File.OpenWrite(filePath);
+                using var writer = new StreamWriter(stream);
+                using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+                var records = new List<dynamic>
+                {
+                    new
+                    {
+                        EmployeeID = SelectedEmployee.employeeID,
+                        HoursWorked,
+                        HourlyRate = SelectedEmployee.hourlyRate,
+                        TaxThreshold = SelectedEmployee.taxthreshold,
+                        GrossPay,
+                        Tax,
+                        NetPay,
+                        Superannuation
+                    }
+                };
+
+                csv.WriteRecords(records);
+                StatusMessage = "Data saved successfully.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to save data: {ex.Message}";
+            }
+        }
+
     }
 }
 

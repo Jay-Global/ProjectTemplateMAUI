@@ -41,9 +41,5 @@ public partial class MainPage : ContentPage
             DisplayAlert("Selected Employee", $" {selection.firstName} {selection.lastName} \n Is claiming a tax free threshold \n {selection.taxthreshold}", "OK");
         }
     }
-
-    //BUTTON EVENT
-    //var selection = PersonDataGrid.SelectedItem as Person;
-    //PAYSLIP.id = PERSON.id DATA
 }
 
