@@ -93,9 +93,21 @@ namespace ProjectTemplate.ViewModel
 
     public partial class MainPageViewModel: ObservableObject
     {
+        private readonly PayCalculator _payCalculator;
+        [ObservableProperty]
+        private Person selectedEmployee;
+
+
         public MainPageViewModel()
         {
             Employees = new ObservableCollection<Person>();
+
+            // Import tax rates
+            ImportTaxRatesWithThreshold();
+            ImportTaxRatesNoThreshold();
+
+            // Initialize PayCalculator
+            _payCalculator = new PayCalculator(TaxRatesWithThreshold, TaxRatesNoThreshold);
         }
 
         [ObservableProperty]
@@ -153,6 +165,76 @@ namespace ProjectTemplate.ViewModel
 
             return record;
         }
+
+
+
+
+
+        public ObservableCollection<TaxRate> TaxRatesWithThreshold { get; private set; } = new ObservableCollection<TaxRate>();
+        public ObservableCollection<TaxRate> TaxRatesNoThreshold { get; private set; } = new ObservableCollection<TaxRate>();
+
+        [RelayCommand]
+        public async Task ImportTaxRatesWithThreshold()
+        {
+            await ImportTaxRates("taxrate-withthreshold.csv", TaxRatesWithThreshold);
+        }
+
+        [RelayCommand]
+        public async Task ImportTaxRatesNoThreshold()
+        {
+            await ImportTaxRates("taxrate-nothreshold.csv", TaxRatesNoThreshold);
+        }
+
+        private async Task ImportTaxRates(string fileName, ObservableCollection<TaxRate> taxRatesCollection)
+        {
+            using var fileStream = await FileSystem.Current.OpenAppPackageFileAsync(fileName);
+            using var reader = new StreamReader(fileStream);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csv.Context.RegisterClassMap<TaxRateMap>();
+
+            while (csv.Read())
+            {
+                var taxRateRecord = csv.GetRecord<TaxRate>();
+                taxRatesCollection.Add(taxRateRecord);
+            }
+        }
+
+        [ObservableProperty]
+        private int hoursWorked;
+
+        [ObservableProperty]
+        private decimal grossPay;
+
+        [ObservableProperty]
+        private decimal tax;
+
+        [ObservableProperty]
+        private decimal netPay;
+
+        [ObservableProperty]
+        private decimal superannuation;
+
+
+        [RelayCommand]
+        public void CalculatePay()
+        {
+            if (SelectedEmployee != null)
+            {
+                decimal grossPay = _payCalculator.CalculateGrossPay(hoursWorked, SelectedEmployee.hourlyRate);
+                bool isTaxFreeThreshold = SelectedEmployee.taxthreshold == "Y";
+                decimal tax = _payCalculator.CalculateTax(grossPay, isTaxFreeThreshold);
+                decimal netPay = _payCalculator.CalculateNetPay(grossPay, tax);
+                decimal superannuation = _payCalculator.CalculateSuperannuation(grossPay, 0.11M); // 11% super rate
+
+                // Update UI-bound properties
+                GrossPay = grossPay;
+                Tax = tax;
+                NetPay = netPay;
+                Superannuation = superannuation;
+            }
+        }
+
+
     }
 }
 

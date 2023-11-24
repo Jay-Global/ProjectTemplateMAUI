@@ -20,8 +20,11 @@ public partial class MainPage : ContentPage
     private void PersonDataGrid_ItemSelected(object sender, SelectionChangedEventArgs e)
     {
         var selection = PersonDataGrid.SelectedItem as Person;
-
-        DisplayAlert("Selected", $"FirstName {selection.firstName} lastname{selection.lastName} taxThreshold? {selection.taxthreshold}", "OK");
+        if (selection != null)
+        {
+            (BindingContext as MainPageViewModel).SelectedEmployee = selection;
+            DisplayAlert("Selected", $"FirstName {selection.firstName} lastname{selection.lastName} taxThreshold? {selection.taxthreshold}", "OK");
+        }
     }
 
     //BUTTON EVENT
