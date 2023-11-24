@@ -123,6 +123,7 @@
         <!--Placeholder for saved file feedback-->
         <HorizontalStackLayout Grid.Column="1" Grid.Row="2" Padding="10">
             <Label Text="Records saved yes/no placeholder"/>
+            <Label Text="{Binding StatusMessage}" TextColor="Red" Margin="50,0,0,0"/>
         </HorizontalStackLayout>
 
         <!--Save Payslip Btn-->

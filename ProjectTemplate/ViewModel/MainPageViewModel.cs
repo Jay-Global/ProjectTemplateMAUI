@@ -94,8 +94,48 @@ namespace ProjectTemplate.ViewModel
     public partial class MainPageViewModel: ObservableObject
     {
 
-        // 
-        private readonly PayCalculator _payCalculator;
+        private PayCalculator _payCalculator;
+        private PayCalculator PayCalculator
+        {
+            get
+            {
+                try
+                {
+                    if (_payCalculator == null && TaxRatesWithThreshold.Count > 0 && TaxRatesNoThreshold.Count > 0)
+                    {
+                        _payCalculator = new PayCalculator(TaxRatesWithThreshold, TaxRatesNoThreshold);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions that occur during PayCalculator initialization
+                    StatusMessage = $"Error initializing PayCalculator: {ex.Message}";
+                }
+                return _payCalculator;
+            }
+        }
+
+
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                await ImportTaxRatesWithThreshold();
+                await ImportTaxRatesNoThreshold();
+
+                if (TaxRatesWithThreshold.Count == 0 || TaxRatesNoThreshold.Count == 0)
+                {
+                    StatusMessage = "Failed to load tax rate data.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during initialization
+                StatusMessage = $"Initialization failed: {ex.Message}";
+            }
+        }
+
+
         [ObservableProperty]
         private Person selectedEmployee;
 
@@ -103,13 +143,6 @@ namespace ProjectTemplate.ViewModel
         public MainPageViewModel()
         {
             Employees = new ObservableCollection<Person>();
-
-            // Import tax rates
-            ImportTaxRatesWithThreshold();
-            ImportTaxRatesNoThreshold();
-
-            // Initialize PayCalculator
-            _payCalculator = new PayCalculator(TaxRatesWithThreshold, TaxRatesNoThreshold);
         }
 
         [ObservableProperty]
@@ -148,9 +181,7 @@ namespace ProjectTemplate.ViewModel
                         employees.Add(CreateRecord(employeeID, firstName, lastName, typeEmployee, hourlyRate, taxthreshold));
 
                     }
-
                 }
-
             }
         }
 
@@ -178,13 +209,13 @@ namespace ProjectTemplate.ViewModel
         [RelayCommand]
         public async Task ImportTaxRatesWithThreshold()
         {
-            await ImportTaxRates("taxrate-withthreshold.csv", TaxRatesWithThreshold);
+            await ImportTaxRates("taxratewiththreshold.csv", TaxRatesWithThreshold);
         }
 
         [RelayCommand]
         public async Task ImportTaxRatesNoThreshold()
         {
-            await ImportTaxRates("taxrate-nothreshold.csv", TaxRatesNoThreshold);
+            await ImportTaxRates("taxratenothreshold.csv", TaxRatesNoThreshold);
         }
 
         private async Task ImportTaxRates(string fileName, ObservableCollection<TaxRate> taxRatesCollection)
@@ -217,8 +248,6 @@ namespace ProjectTemplate.ViewModel
         private decimal superannuation;
 
 
-
-
         [ObservableProperty]
         private string nameDisplay;
 
@@ -240,11 +269,14 @@ namespace ProjectTemplate.ViewModel
         [ObservableProperty]
         private string timeDisplay;
 
+        [ObservableProperty]
+        private string statusMessage;
+
 
         [RelayCommand]
         public void CalculatePay()
         {
-            if (SelectedEmployee != null)
+            if (SelectedEmployee != null && PayCalculator != null)
             {
                 // Set UI-bound properties for employee details
                 NameDisplay = $"{SelectedEmployee.firstName} {SelectedEmployee.lastName}";
@@ -271,10 +303,11 @@ namespace ProjectTemplate.ViewModel
                 // Clear the hours worked input
                 HoursWorked = 0;
             }
+            else
+            {
+                StatusMessage = "Unable to calculate pay. Please try again.";
+            }
         }
-
-
-
     }
 }
 

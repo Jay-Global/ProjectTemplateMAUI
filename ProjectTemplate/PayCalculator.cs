@@ -21,12 +21,13 @@ namespace ProjectTemplate
 
         public decimal CalculateTax(decimal grossPay, bool isTaxFreeThreshold)
         {
+            
             var taxRates = isTaxFreeThreshold ? _taxRatesWithThreshold : _taxRatesNoThreshold;
             foreach (var rate in taxRates)
             {
                 if (grossPay >= rate.Min && grossPay <= rate.Max)
                 {
-                    return grossPay * rate.Rate + rate.Constant;
+                    return grossPay * rate.Rate - rate.Constant;
                 }
             }
             return 0;

@@ -14,7 +14,22 @@ public partial class MainPage : ContentPage
         BindingContext = viewModel;
 
         viewModel.ImportSomeRecords();
-        
+    }
+
+    //protected override async void OnAppearing()
+    //{
+    //    base.OnAppearing();
+    //    await ((MainPageViewModel)BindingContext).InitializeAsync();
+    //}
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        var viewModel = BindingContext as MainPageViewModel;
+        if (viewModel != null)
+        {
+            await viewModel.InitializeAsync();
+        }
     }
 
     private void PersonDataGrid_ItemSelected(object sender, SelectionChangedEventArgs e)

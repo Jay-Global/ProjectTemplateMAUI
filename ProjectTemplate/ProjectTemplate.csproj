@@ -49,10 +49,14 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="taxratenothreshold.csv" />
+		<MauiAsset Include="taxratewiththreshold.csv" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="employee.csv" />
+	  <None Remove="taxratenothreshold.csv" />
+	  <None Remove="taxratewiththreshold.csv" />
 	</ItemGroup>
 
 	<ItemGroup>
