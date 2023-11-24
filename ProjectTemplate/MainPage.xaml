@@ -95,18 +95,17 @@
            
         <!--Payslip Summary-->
         <VerticalStackLayout Grid.Column="1" Grid.Row="1" Padding="10">
-            <Label Text="Id Placeholder"/>
-            <Label Text="Name Placeholder"/>
-            <Label Text="Role Placeholder"/>
-            <Label Text="TaxThreshold Y/N Placeholder"/>
-            <Label Text="HoursWorked Placeholder"/>
-            <Label Text="Hrly Rate Placeholder"/>
+            <Label Text="{Binding NameDisplay}"/>
+            <Label Text="{Binding RoleDisplay}"/>
+            <Label Text="{Binding TaxThresholdDisplay}"/>
+            <Label Text="{Binding HoursWorkedDisplay}"/>
+            <Label Text="{Binding HourlyRateDisplay}"/>
                 <Label Text="{Binding GrossPay}"/>
                 <Label Text="{Binding Tax}"/>
                 <Label Text="{Binding NetPay}"/>
                 <Label Text="{Binding Superannuation}"/>
-            <Label Text="Date Placeholder"/>
-            <Label Text="Time Placeholder"/>
+            <Label Text="{Binding DateDisplay}"/>
+            <Label Text="{Binding TimeDisplay}"/>
         </VerticalStackLayout>
 
         <!--Placeholder for saved file feedback-->

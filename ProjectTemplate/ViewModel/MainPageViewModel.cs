@@ -93,6 +93,8 @@ namespace ProjectTemplate.ViewModel
 
     public partial class MainPageViewModel: ObservableObject
     {
+
+        // 
         private readonly PayCalculator _payCalculator;
         [ObservableProperty]
         private Person selectedEmployee;
@@ -168,7 +170,7 @@ namespace ProjectTemplate.ViewModel
 
 
 
-
+        // MY CODE
 
         public ObservableCollection<TaxRate> TaxRatesWithThreshold { get; private set; } = new ObservableCollection<TaxRate>();
         public ObservableCollection<TaxRate> TaxRatesNoThreshold { get; private set; } = new ObservableCollection<TaxRate>();
@@ -215,24 +217,62 @@ namespace ProjectTemplate.ViewModel
         private decimal superannuation;
 
 
+
+
+        [ObservableProperty]
+        private string nameDisplay;
+
+        [ObservableProperty]
+        private string roleDisplay;
+
+        [ObservableProperty]
+        private string taxThresholdDisplay;
+
+        [ObservableProperty]
+        private string hoursWorkedDisplay;
+
+        [ObservableProperty]
+        private string hourlyRateDisplay;
+
+        [ObservableProperty]
+        private string dateDisplay;
+
+        [ObservableProperty]
+        private string timeDisplay;
+
+
         [RelayCommand]
         public void CalculatePay()
         {
             if (SelectedEmployee != null)
             {
-                decimal grossPay = _payCalculator.CalculateGrossPay(hoursWorked, SelectedEmployee.hourlyRate);
+                // Set UI-bound properties for employee details
+                NameDisplay = $"{SelectedEmployee.firstName} {SelectedEmployee.lastName}";
+                RoleDisplay = SelectedEmployee.typeEmployee;
+                TaxThresholdDisplay = SelectedEmployee.taxthreshold == "Y" ? "Yes" : "No";
+                HoursWorkedDisplay = HoursWorked.ToString();
+                HourlyRateDisplay = SelectedEmployee.hourlyRate.ToString("C");
+
+                // Perform calculations
+                decimal grossPay = _payCalculator.CalculateGrossPay(HoursWorked, SelectedEmployee.hourlyRate);
                 bool isTaxFreeThreshold = SelectedEmployee.taxthreshold == "Y";
                 decimal tax = _payCalculator.CalculateTax(grossPay, isTaxFreeThreshold);
                 decimal netPay = _payCalculator.CalculateNetPay(grossPay, tax);
                 decimal superannuation = _payCalculator.CalculateSuperannuation(grossPay, 0.11M); // 11% super rate
 
-                // Update UI-bound properties
+                // Set UI-bound properties for calculation results
                 GrossPay = grossPay;
                 Tax = tax;
                 NetPay = netPay;
                 Superannuation = superannuation;
+                DateDisplay = DateTime.Now.ToString("d");
+                TimeDisplay = DateTime.Now.ToString("T");
+
+                // Clear the hours worked input
+                HoursWorked = 0;
             }
         }
+
 
 
     }
